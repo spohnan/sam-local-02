@@ -15,7 +15,7 @@ https://github.com/awslabs/aws-sam-local
     sam local start-api
 Endpoint will be http://localhost:3000
 
-##Invoke a function locally in debug mode on port 5858 
+## Invoke a function locally in debug mode on port 5858 
     sam local invoke -d 5858 <function logical id>
 
 ## Start local API Gateway in debug mode on port 5858
