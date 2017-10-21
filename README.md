@@ -5,9 +5,11 @@ https://github.com/awslabs/aws-sam-local
 
 ## Prerequisites
 
+* Docker
+* `npm install -g aws-sam-local`
 
 ## Run unit tests
-      npm test
+    npm test
 
 ## Run local API Gateway
     sam local start-api
