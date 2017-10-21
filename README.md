@@ -6,7 +6,7 @@ https://github.com/awslabs/aws-sam-local
 ## Prerequisites
 
 * Docker
-* `npm install -g aws-sam-local`
+* npm install -g aws-sam-local
 
 ## Run unit tests
     npm test
