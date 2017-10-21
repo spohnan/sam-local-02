@@ -8,6 +8,9 @@ https://github.com/awslabs/aws-sam-local
 * Docker
 * npm install -g aws-sam-local
 
+## Validate YAML template
+    sam validate
+
 ## Run unit tests
     npm test
 
@@ -37,3 +40,9 @@ Endpoint will be http://localhost:3000
             }
         ]
     }
+
+## Package SAM template
+    sam package --template-file template.yaml --s3-bucket $MY_BUCKET_NAME --output-template-file packaged.yaml
+
+## Deploy packaged SAM template
+    sam deploy --template-file ./packaged.yaml --stack-name $MY_STACK_NAME --capabilities CAPABILITY_IAM
