@@ -3,7 +3,7 @@
 
 const LambdaTester = require('lambda-tester'),
 	expect = require('chai').expect,
-	handler = require('../apex').handler;
+	handler = require('../functions/version').handler;
 
 describe('Apex Tests', function () {
 
@@ -13,7 +13,7 @@ describe('Apex Tests', function () {
 
 			.expectResult(function (result) {
 				expect(result.statusCode).to.equal(200);
-				expect('Content-Type', /json/)
+				expect('Content-Type', /json/);
 				expect(JSON.parse(result.body)).to.have.all.keys(["name", "version"]);
 			});
 

@@ -9,7 +9,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Runtime: nodejs6.10
-      Handler: apex.handler
+      Handler: functions/version.handler
       Events:
         GetApex:
           Type: Api
