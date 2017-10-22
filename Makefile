@@ -8,14 +8,20 @@
 TEMPLATE := template.yaml
 
 api:
+	${INFO} "starting api-gateway"
 	@sam local start-api
 
 debug:
+	${INFO} "debugging api-gateway"
 	@sam local start-api -d 5858
 
-test:
+lint:
+	${INFO} "linting"
+	@node node_modules/.bin/jshint **/*.js
+
+test: lint
 	${INFO} "testing"
-	@npm test
+	@node node_modules/.bin/mocha
 
 validate:
 	${INFO} "validating"
@@ -24,7 +30,7 @@ validate:
 # ~~~~~~~~~~~~~~~~~~~~~~~~
 # Support routines
 
-.PHONY: api debug test validate
+.PHONY: api debug lint test validate
 
 COLOR := "\e[1;35m"
 NC := "\e[0m"

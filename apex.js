@@ -1,12 +1,13 @@
+/* jshint node: true, esversion: 6 */
 'use strict';
 
-const API_NAME = "SAM-LOCAL-02"
-const API_VERSION = "0.0.1-SNAPSHOT"
+const API_NAME = "SAM-LOCAL-02",
+	API_VERSION = "0.0.1-SNAPSHOT";
 
 exports.handler = (event, context, callback) => {
 
 	var responseBody = {
-		"name": API_NAME, 
+		"name": API_NAME,
 		"version": API_VERSION
 	};
 
@@ -17,4 +18,5 @@ exports.handler = (event, context, callback) => {
 	};
 
 	callback(null, response);
-}
+
+};

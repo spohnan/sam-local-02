@@ -8,7 +8,7 @@ http://docs.aws.amazon.com/lambda/latest/dg/test-sam-local.html
 
 * Docker
 * npm install -g aws-sam-local
-* npm install mocha chai lambda-tester --save-dev
+* npm install mocha chai lambda-tester jshint --save-dev
 
 ## Validate YAML template
     sam validate

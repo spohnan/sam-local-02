@@ -5,14 +5,14 @@ Description: An example RESTful service
 
 Resources:
 
-  ExampleFunction:
+  FunctionGetApex:
     Type: AWS::Serverless::Function
     Properties:
       Runtime: nodejs6.10
-      Handler: index.handler
+      Handler: apex.handler
       Events:
-        ListCustomers:
+        GetApex:
           Type: Api
           Properties:
             Path: /
-            Method: any
+            Method: GET
