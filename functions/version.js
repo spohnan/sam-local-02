@@ -6,17 +6,26 @@ const API_NAME = "SAM-LOCAL-02",
 
 exports.handler = (event, context, callback) => {
 
-	var responseBody = {
-		"name": API_NAME,
-		"version": API_VERSION
-	};
+	switch (event.httpMethod) {
 
-	var response = {
-		statusCode: 200,
-		headers: { "x-custom-header": "my custom header value" },
-		body: JSON.stringify(responseBody)
-	};
+		case "GET":
 
-	callback(null, response);
+			var responseBody = {
+				"name": API_NAME,
+				"version": API_VERSION
+			};
+
+			callback(null, {
+				statusCode: 200,
+				headers: {},
+				body: JSON.stringify(responseBody)
+			});
+
+			break;
+
+		default:
+			callback(null, { statusCode: 501 });
+
+	}
 
 };

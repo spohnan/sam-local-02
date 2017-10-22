@@ -1,50 +1,18 @@
 # SAM Local Development Test Project
 
 ## SAM Local Project
-https://github.com/awslabs/aws-sam-local
-http://docs.aws.amazon.com/lambda/latest/dg/test-sam-local.html
+* https://aws.amazon.com/blogs/aws/new-aws-sam-local-beta-build-and-test-serverless-applications-locally/
+* https://github.com/awslabs/aws-sam-local
+* http://docs.aws.amazon.com/lambda/latest/dg/test-sam-local.html
 
 ## Prerequisites
-
 * Docker
 * npm install -g aws-sam-local
-* npm install mocha chai lambda-tester jshint --save-dev
+* npm install chai istanbul jshint lambda-tester mocha --save-dev
 
-## Validate YAML template
-    sam validate
-
-## Run unit tests
-    npm test
-
-# Invoking function with event via stdin
-    echo '{"message": "Hey, are you there?" }' | sam local invoke "Ratings"
-
-## Run local API Gateway
-    sam local start-api
-Endpoint will be http://localhost:3000
-
-## Invoke a function locally in debug mode on port 5858 
-    sam local invoke -d 5858 <function logical id>
-
-## Start local API Gateway in debug mode on port 5858
-    sam local start-api -d 5858
-
-## Debugging needs a launch configuration in VS Code
-    {
-        "version": "0.2.0",
-        "configurations": [
-            {
-                "name": "Attach to SAM Local",
-                "type": "node",
-                "request": "attach",
-                "address": "localhost",
-                "port": 5858,
-                "localRoot": "${workspaceRoot}",
-                "remoteRoot": "/var/task",
-                "protocol": "legacy"
-            }
-        ]
-    }
+## Prerequisites for local development environment w/debug
+* NodeJS 6.10
+* http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.html
 
 ## Package SAM template
     sam package --template-file template.yaml --s3-bucket $MY_BUCKET_NAME --output-template-file packaged.yaml
