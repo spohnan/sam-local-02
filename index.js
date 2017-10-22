@@ -1,8 +1,20 @@
 'use strict';
 
-exports.handler = function (event, context) {
-	if ((event.name === 'Richard') || (event.name === 'rhyatt')) {
-		return context.succeed({ valid: true });
-	}
-	context.fail(new Error('unknown name'));
-};
+const API_NAME = "SAM-LOCAL-02"
+const API_VERSION = "0.0.1-SNAPSHOT"
+
+exports.handler = (event, context, callback) => {
+
+	var responseBody = {
+		"name": API_NAME, 
+		"version": API_VERSION
+	};
+
+	var response = {
+		statusCode: 200,
+		headers: { "x-custom-header": "my custom header value" },
+		body: JSON.stringify(responseBody)
+	};
+
+	callback(null, response);
+}

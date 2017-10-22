@@ -2,17 +2,22 @@
 
 ## SAM Local Project
 https://github.com/awslabs/aws-sam-local
+http://docs.aws.amazon.com/lambda/latest/dg/test-sam-local.html
 
 ## Prerequisites
 
 * Docker
 * npm install -g aws-sam-local
+* npm install mocha chai lambda-tester --save-dev
 
 ## Validate YAML template
     sam validate
 
 ## Run unit tests
     npm test
+
+# Invoking function with event via stdin
+    echo '{"message": "Hey, are you there?" }' | sam local invoke "Ratings"
 
 ## Run local API Gateway
     sam local start-api
