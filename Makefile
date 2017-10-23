@@ -5,7 +5,7 @@
 # tested README for all of the available commands
 #
 
-PROFILE := $(if $(PROFILE), $(PROFILE), '')
+PROFILE := $(if $(PROFILE), $(PROFILE),)
 STACK_NAME := $(if $(STACK_NAME), $(STACK_NAME), 'sam-deployment')
 
 #
@@ -32,15 +32,11 @@ lint:
 	${INFO} "linting"
 	@node_modules/.bin/jshint **/*.js
 
-package: env-var-guard-S3_BUCKET
-	${INFO} "packaging"
-	@sam package --template-file template.yaml --s3-bucket $(S3_BUCKET) --output-template-file packaged.yaml $(PROFILE)
-
 report: test-coverage
 	${INFO} "generating coverage report"
 	@open coverage/lcov-report/index.html
 
-test: lint
+test: lint validate
 	${INFO} "testing"
 	@node_modules/.bin/_mocha
 
@@ -63,6 +59,10 @@ delete-stack:
 deploy: package
 	${INFO} "deploying"
 	@sam deploy --template-file ./packaged.yaml --stack-name $(STACK_NAME) $(PROFILE) --capabilities CAPABILITY_IAM
+
+package: env-var-guard-S3_BUCKET
+	${INFO} "packaging"
+	@sam package --template-file template.yaml --s3-bucket $(S3_BUCKET) --output-template-file packaged.yaml $(PROFILE)
 
 #
 # Misc Support Targets
