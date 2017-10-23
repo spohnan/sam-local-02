@@ -5,10 +5,12 @@
 # tested README for all of the available commands
 #
 
-TEMPLATE := template.yaml
+PROFILE := $(if $(PROFILE), $(PROFILE), '')
+STACK_NAME := $(if $(STACK_NAME), $(STACK_NAME), 'sam-deployment')
 
-# TODO: Both the DB and the NodeJS 6.10 paths will be unique per environment
-DB_HOME :=  /Users/aspohn/dev/bin/dynamodb
+#
+# Development Targets
+#
 
 api:
 	${INFO} "starting api-gateway"
@@ -18,7 +20,7 @@ clean:
 	${INFO} "cleaning"
 	@rm -fr coverage/ packaged.yaml
 
-db-start:
+db-start: env-var-guard-DB_HOME
 	${INFO} "starting local dynamodb"
 	@java -Djava.library.path=$(DB_HOME)/DynamoDBLocal_lib -jar $(DB_HOME)/DynamoDBLocal.jar -sharedDb
 
@@ -29,6 +31,10 @@ debug:
 lint:
 	${INFO} "linting"
 	@node_modules/.bin/jshint **/*.js
+
+package: env-var-guard-S3_BUCKET
+	${INFO} "packaging"
+	@sam package --template-file template.yaml --s3-bucket $(S3_BUCKET) --output-template-file packaged.yaml $(PROFILE)
 
 report: test-coverage
 	${INFO} "generating coverage report"
@@ -44,14 +50,33 @@ test-coverage: lint
 
 validate:
 	${INFO} "validating"
-	@sam validate $(TEMPLATE)
+	@sam validate template.yaml
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~
-# Support routines
+#
+# Production/Deployment Targets
+#
+
+delete-stack:
+	${INFO} "deleting stack $(STACK_NAME)"
+	@aws cloudformation delete-stack --stack-name $(STACK_NAME) $(PROFILE)
+
+deploy: package
+	${INFO} "deploying"
+	@sam deploy --template-file ./packaged.yaml --stack-name $(STACK_NAME) $(PROFILE) --capabilities CAPABILITY_IAM
+
+#
+# Misc Support Targets
+#
 
 .PHONY: api clean db-start debug lint report test test-coverage validate
 
-COLOR := "\e[1;35m"
+env-var-guard-%:
+	@ if [ "${${*}}" = "" ]; then \
+		echo "Environment variable $* must be set"; \
+		exit 1; \
+	fi
+
+COLOR := "\e[1;34m"
 NC := "\e[0m"
 INFO := @bash -c '\
   printf $(COLOR); \
