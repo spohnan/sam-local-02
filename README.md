@@ -6,13 +6,14 @@
 * http://docs.aws.amazon.com/lambda/latest/dg/test-sam-local.html
 
 ## Prerequisites
+* AWS CLI
 * Docker
 * npm install -g aws-sam-local
-* AWS CLI
+* npm install
+* (Optional) Make
 
 ## Prerequisites for local development environment w/debug
 * NodeJS 6.10
-* http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.html
 
 ## Customized Local Settings
 
