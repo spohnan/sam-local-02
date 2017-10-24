@@ -4,6 +4,7 @@
 * https://aws.amazon.com/blogs/aws/new-aws-sam-local-beta-build-and-test-serverless-applications-locally/
 * https://github.com/awslabs/aws-sam-local
 * http://docs.aws.amazon.com/lambda/latest/dg/test-sam-local.html
+* https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html
 
 ## Prerequisites
 * AWS CLI
