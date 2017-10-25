@@ -1,0 +1,229 @@
+swagger: '2.0'
+info:
+  version: '1.0.0'
+  title: Federal Business Opportunity API
+  description: 
+    This API is used to track and compile federal business opportunities scraped from the following website.  http://www.fbodaily.com/
+  
+  
+# Models
+
+definitions:
+  Opportunity:
+    type: object
+    properties:
+      icf_biz_opp_id:
+        type: integer
+        format: int64
+      contracting_office:
+        type: string
+      fbo_gov_permanent_weblink:
+        type: string
+        format: url
+      naics:
+        type: string
+      notice_date:
+        type: string
+        format: date
+      notice_type:
+        type: string
+      opp_description:
+        type: string
+      opp_fbodaily_weblink:
+        type: string
+        format: url
+      opp_publish_date:
+        type: string
+        format: date
+      opp_title:
+        type: string
+      poc_name_phone_email:
+        type: string
+      small_business_set_aside:
+        type: string
+      solicitation_number:
+        type: string
+    xml:
+      name: Opportunity
+  OpportunitySearch:
+    type: object
+    properties:
+      date_start:
+        type: string
+        format: date
+      date_end:
+        type: string
+        format: date
+      keywords:
+        type: array
+        items:
+          type: string
+      opportunity_desc:
+        type: string
+      title:
+        type: string
+      naics_code:
+        type: string
+      agency:
+        type: string
+      poc_name:
+        type: string
+      page_size:
+        type: integer
+        format: int64
+        maximum: 100
+        minimum: 25
+        default: 25
+      page_index:
+        type: integer
+        format: int64
+        minimum: 0
+        default: 0
+      page_on_server:
+        type: boolean
+        default: true
+    xml: 
+      name: OpportunitySearch
+
+# ./Models   
+ 
+# Security 
+ 
+securityDefinitions:
+  accessCode:
+    type: oauth2
+    authorizationUrl: https://login.microsoftonline.com/${TENNANT_GUID}/oauth2/authorize
+    flow: implicit
+    scopes:
+      write: allows modifying resources
+      read: allows reading resources
+
+# ./Security
+
+# API
+
+# Here we apply the security flow called 'accessCode' globally to all the opeartions in the spec. 
+# This security scheme is defined above in the 'securityDefinitions' section.
+# Global security can be overriden an operation level as seen in the example below
+security:
+  - accessCode:
+    - read
+    - write
+paths:
+  /opportunity:
+    # Operations on opportunity resource
+    post:
+      summary: Add a new opportunity with a system generated id
+      parameters:
+        - in: body
+          name: body
+          description: the request model
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Opportunity"
+      responses:
+        200:
+          description: OK
+        400:
+          description: Invalid request model; type=Opportunity
+          
+  /opportunity/{id}:
+    # Operations on opportunity resource
+    parameters:
+      - in: path
+        name: id
+        type: string
+        required: true
+    get:
+      summary: Get an opportunity by id
+      produces:
+        - application/xml
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Opportunity"
+        400:
+          description: Invalid id
+        404:
+          description: Resource not found
+    post:
+      summary: Add or update new opportunity with the specified id
+      parameters:
+        - in: body
+          name: body
+          description: the request model
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Opportunity"
+      responses:
+        200:
+          description: OK
+        400:
+          description: invalid id
+        404:
+          description: Resource not found
+    delete:
+      summary: Delete an opportunity by id
+      responses:
+        200:
+          description: OK
+        400:
+          description: Invalid id
+        404:
+          description: Resource not found
+          
+  /opportunities:
+    post:
+      summary: Bulk insert new opportunities
+      parameters:
+        - in: body
+          name: body
+          description: the request model
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Opportunity"
+      responses: 
+        200:
+          description: OK
+        400:
+          description: Invalid request model; type=Array<SearchOpportunity>
+        
+  /opportunities/search:
+    # Search for opportunities
+    post:
+      summary: Get filtered and sorted opportunities based on request criteria
+      produces:
+        - application/xml
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: The request model; contains search terms and filters
+          required: true
+          schema:
+            $ref: "#/definitions/OpportunitySearch"
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Opportunity"
+        400:
+          description: Invalid request model; type=SearchOpportunity
+
+# ./ API
+
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+basePath: /icf/FedBizOpsApi/1.0.0
+schemes:
+ - https
