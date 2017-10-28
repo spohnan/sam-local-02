@@ -3,16 +3,33 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "test": "mocha"
-  },
   "author": "",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "devDependencies": {
     "chai": "^4.1.2",
+    "cross-var": "^1.1.0",
     "istanbul": "^0.4.5",
     "jshint": "^2.9.5",
     "lambda-tester": "^3.1.0",
-    "mocha": "^4.0.1"
+    "mocha": "^4.0.1",
+    "opener": "^1.4.3",
+    "rimraf": "^2.6.2"
+  },
+  "config": {
+    "source": "config.js"
+  },
+  "scripts": {
+    "foo": "cross-var echo $S3_BUCKET",
+    "api": "sam local start-api",
+    "clean": "node_modules/.bin/rimraf coverage/ packaged.yaml",
+    "debug": "sam local start-api -d 5858",
+    "delete-stack": "aws cloudformation delete-stack --stack-name \"$STACK_NAME\" $PROFILE",
+    "deploy": "sam deploy --template-file ./packaged.yaml --stack-name \"$STACK_NAME\" $PROFILE --capabilities CAPABILITY_IAM",
+    "lint": "node_modules/.bin/jshint **/*.js",
+    "package": "sam package --template-file template.yaml --s3-bucket $S3_BUCKET --output-template-file packaged.yaml $PROFILE",
+    "report": "npm run test-coverage && opener coverage/lcov-report/index.html",
+    "test": "npm run lint && npm run validate && node_modules/.bin/_mocha",
+    "test-coverage": "npm run lint && node_modules/.bin/istanbul cover node_modules/.bin/_mocha -- -- test/**/*",
+    "validate": "sam validate template.yaml"
   }
 }
