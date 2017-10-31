@@ -1,11 +1,10 @@
-/* jshint node: true, mocha: true, esversion: 6 */
 'use strict';
 
 const LambdaTester = require('lambda-tester'),
 	expect = require('chai').expect,
 	handler = require('../functions/version').handler;
 
-describe('Implemented Apex Methods', function () {
+describe('Apex GET', function () {
 	it('GET /', function () {
 		return LambdaTester(handler)
 			.event({ "httpMethod": "GET" })

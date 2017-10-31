@@ -1,13 +1,12 @@
 'use strict';
 
-const aws = require('aws-sdk'),
+const AWS = require('aws-sdk'),
   config = require('../config'),
   dbConfig = { apiVersion: '2012-08-10' },
   sanitize = require('he'),
   uuid = require('node-uuid');
   
 if (process.env.AWS_SAM_LOCAL) { dbConfig.endpoint = config.LOCAL_DB_ENDPOINT; }
-const db = new aws.DynamoDB(dbConfig);
 
 exports.handler = (event, context, callback) => {
   switch (event.httpMethod) {
@@ -23,6 +22,8 @@ exports.handler = (event, context, callback) => {
 };
 
 function getHandler(event, context, callback) {
+  const db = new AWS.DynamoDB(dbConfig);
+
   var params = {
     Key: {
       "icf_biz_opp_id": { 
@@ -35,12 +36,11 @@ function getHandler(event, context, callback) {
   var promise = db.getItem(params).promise();
   promise.then(function (data) {
     callback(null, {
-      statusCode: 201,
+      statusCode: 200,
       headers: {},
       body: JSON.stringify(data)
     });
   }).catch(function (err) {
-    console.log(err.stack);
     callback(null, {
       statusCode: 500,
       headers: {},
@@ -50,8 +50,9 @@ function getHandler(event, context, callback) {
 }
 
 function postHandler(event, context, callback) {
+  const db = new AWS.DynamoDB(dbConfig);
   var i = JSON.parse(event.body);
-  i.icf_biz_opp_id = uuid.v1();
+  i.icf_biz_opp_id = uuid.v4();
   i.links = [{
     "rel": "self",
     "href": "/opportunity/" + i.icf_biz_opp_id
