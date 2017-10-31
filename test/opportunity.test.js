@@ -1,7 +1,6 @@
 'use strict';
 
 const AWS = require('aws-sdk-mock'),
-  AWS_SDK = require('aws-sdk'),
   LambdaTester = require('lambda-tester'),
   expect = require('chai').expect,
   fx = require('node-fixtures'),
