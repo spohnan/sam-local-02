@@ -18,7 +18,7 @@ describe('Implemented Apex Methods', function () {
 });
 
 describe('Unimplemented Apex Methods', function () {
-	['POST', 'PUT', 'DELETE'].forEach(function (method) {
+	['POST', 'PUT', 'DELETE'].map(function (method) {
 		it(`${method} /`, function () {
 			return LambdaTester(handler)
 				.event({ "httpMethod": method })

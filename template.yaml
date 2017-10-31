@@ -1,66 +1,84 @@
 AWSTemplateFormatVersion : '2010-09-09'
-Transform: AWS::Serverless-2016-10-31
-
+Transform: 'AWS::Serverless-2016-10-31'
 Description: 'Federal Business Opportunity API'
-# https://github.com/widdix/aws-velocity/blob/master/infrastructure/serverless.yml
+
+Mappings:
+
+  Constants:
+    ValueOf:
+      NodeVersion: 'nodejs6.10'
 
 Resources:
 
   ApiGateway:
-    Type: AWS::Serverless::Api
-    Properties:
-      StageName: dev
-      DefinitionBody:
-        swagger: '2.0'
-        info:
-          version: '1.0.0'
-          title: Federal Business Opportunity API
-          description: This API is used to track and compile federal business opportunities scraped from the following website.  http://www.fbodaily.com/
-        paths:
-          /op/{id}:
-            parameters:
-              - in: path
-                name: id
-                type: string
-                required: true
-            get:
-              summary: Get an opportunity by id
-              produces:
-                - application/xml
-                - application/json
-              responses:
-                200:
-                  description: OK
-                  schema:
-                    $ref: "#/definitions/Opportunity"
-                400:
-                  description: Invalid id
-                404:
-                  description: Resource not found
-              x-amazon-apigateway-request-validator: basic
-              x-amazon-apigateway-integration:
-                httpMethod: POST
-                type: 'aws_proxy'
-                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${FunctionGetApex.Arn}/invocations'
-                passthroughBehavior: when_no_match
-        definitions:
-          Opportunity:
-            type: object
-            properties:
-              icf_biz_opp_id:
-                type: integer
-                format: int64
+    Type: 'AWS::Serverless::Api'
+    StageName: 'dev'
+    DefinitionUri: 'swagger.yaml'
 
-  FunctionGetApex:
-    Type: AWS::Serverless::Function
+  # ~~~ Lambda Functions ~~~
+
+  ApexGet:
+    Type: 'AWS::Serverless::Function'
     Properties:
-      Runtime: nodejs6.10
-      Handler: functions/version.handler
+      Runtime: !FindInMap [ Constants,  ValueOf, NodeVersion ]
+      Handler: 'functions/version.handler'
       Events:
         Http:
           Type: Api
           Properties:
-            Path: /op/{n}
+            Path: /
+            Method: GET
+            RestApiId: !Ref ApiGateway
+
+  LocalTablePost:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Runtime: !FindInMap [ Constants,  ValueOf, NodeVersion ]
+      Handler: 'functions/local-table.handler'
+      Events:
+        Http:
+          Type: Api
+          Properties:
+            Path: /local-table
+            Method: POST
+            RestApiId: !Ref ApiGateway
+
+  OpportunityGet:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Runtime: !FindInMap [ Constants,  ValueOf, NodeVersion ]
+      Handler: 'functions/opportunity.handler'
+      Events:
+        Http:
+          Type: Api
+          Properties:
+            Path: /opportunity/{id}
+            Method: GET
+            RestApiId: !Ref ApiGateway
+
+  OpportunityPost:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Runtime: !FindInMap [ Constants,  ValueOf, NodeVersion ]
+      Handler: 'functions/opportunity.handler'
+      Events:
+        Http:
+          Type: Api
+          Properties:
+            Path: /opportunity
+            Method: POST
+            RestApiId: !Ref ApiGateway
+
+  VersionGet:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Runtime: !FindInMap [ Constants,  ValueOf, NodeVersion ]
+      Handler: 'functions/version.handler'
+      Events:
+        Http:
+          Type: Api
+          Properties:
+            Path: /version
             Method: GET
             RestApiId: !Ref ApiGateway
 

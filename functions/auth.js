@@ -1,3 +1,5 @@
+'use strict';
+
 exports.handler = function(event, context, callback) {
     console.log('Client token: ' + event.authorizationToken);
     console.log('Method ARN: ' + event.methodArn);
@@ -9,7 +11,7 @@ exports.handler = function(event, context, callback) {
     // 1. Call out to OAuth provider
     // 2. Decode a JWT token inline
     // 3. Lookup in a self-managed DB
-    var principalId = 'user|a1b2c3d4'
+    var principalId = 'user|a1b2c3d4';
 
     // you can send a 401 Unauthorized response to the client by failing like so:
     // callback("Unauthorized", null);
@@ -142,7 +144,7 @@ function AuthPolicy(principal, awsAccountId, apiOptions) {
     } else {
       this.stage = apiOptions.stage;
     }
-};
+}
 
 /**
  * A set of existing HTTP verbs supported by API Gateway. This property is here
@@ -206,7 +208,7 @@ AuthPolicy.prototype = (function() {
       this.denyMethods.push({
         resourceArn: resourceArn,
         conditions: conditions
-      })
+      });
     }
   };
 
